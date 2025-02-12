@@ -1,0 +1,89 @@
+# French translation
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-11 15:00+0000\n"
+"PO-Revision-Date: 2024-02-11 15:00+0000\n"
+"Last-Translator: AI Assistant\n"
+"Language-Team: French\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Meditation"
+msgstr "Méditation"
+
+msgid "Meditation List"
+msgstr "Liste des méditations"
+
+msgid "Meditations"
+msgstr "Méditations"
+
+msgid "Duration"
+msgstr "Durée"
+
+msgid "min."
+msgstr "min."
+
+msgid "Start Meditation"
+msgstr "Commencer la méditation"
+
+msgid "No meditations available at the moment."
+msgstr "Aucune méditation disponible pour le moment."
+
+msgid "Volume"
+msgstr "Volume"
+
+msgid "Start"
+msgstr "Commencer"
+
+msgid "Pause"
+msgstr "Pause"
+
+msgid "Reset"
+msgstr "Réinitialiser"
+
+msgid "Top"
+msgstr "Top"
+
+msgid "Tracks"
+msgstr "Pistes"
+
+msgid "Courses"
+msgstr "Cours"
+
+msgid "Workshops"
+msgstr "Ateliers"
+
+msgid "Groups"
+msgstr "Groupes"
+
+msgid "Events"
+msgstr "Événements"
+
+msgid "Sort"
+msgstr "Trier"
+
+msgid "Filters"
+msgstr "Filtres"
+
+msgid "MEDITATION"
+msgstr "MÉDITATION"
+
+msgid "Home"
+msgstr "Accueil"
+
+msgid "Learn"
+msgstr "Apprendre"
+
+msgid "Practice"
+msgstr "Pratiquer"
+
+msgid "Community"
+msgstr "Communauté"
+
+msgid "Profile"
+msgstr "Profil" 

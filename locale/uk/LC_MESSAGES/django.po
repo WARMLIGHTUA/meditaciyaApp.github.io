@@ -1,0 +1,89 @@
+# Ukrainian translation
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-11 15:00+0000\n"
+"PO-Revision-Date: 2024-02-11 15:00+0000\n"
+"Last-Translator: AI Assistant\n"
+"Language-Team: Ukrainian\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgid "Meditation"
+msgstr "Медитація"
+
+msgid "Meditation List"
+msgstr "Список медитацій"
+
+msgid "Meditations"
+msgstr "Медитації"
+
+msgid "Duration"
+msgstr "Тривалість"
+
+msgid "min."
+msgstr "хв."
+
+msgid "Start Meditation"
+msgstr "Почати медитацію"
+
+msgid "No meditations available at the moment."
+msgstr "Наразі немає доступних медитацій."
+
+msgid "Volume"
+msgstr "Гучність"
+
+msgid "Start"
+msgstr "Почати"
+
+msgid "Pause"
+msgstr "Пауза"
+
+msgid "Reset"
+msgstr "Скинути"
+
+msgid "Top"
+msgstr "Топ"
+
+msgid "Tracks"
+msgstr "Треки"
+
+msgid "Courses"
+msgstr "Курси"
+
+msgid "Workshops"
+msgstr "Воркшопи"
+
+msgid "Groups"
+msgstr "Групи"
+
+msgid "Events"
+msgstr "Події"
+
+msgid "Sort"
+msgstr "Сортування"
+
+msgid "Filters"
+msgstr "Фільтри"
+
+msgid "MEDITATION"
+msgstr "МЕДИТАЦІЯ"
+
+msgid "Home"
+msgstr "Головна"
+
+msgid "Learn"
+msgstr "Вивчати"
+
+msgid "Practice"
+msgstr "Практика"
+
+msgid "Community"
+msgstr "Спільнота"
+
+msgid "Profile"
+msgstr "Профіль" 

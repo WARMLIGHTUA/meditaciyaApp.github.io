@@ -1,0 +1,182 @@
+{% extends 'meditation/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Meditation List" %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/top/' %}active{% endif %}" href="{% url 'meditation:top_list' %}">{% trans "Top" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'tracks' in request.path %}active{% endif %}" href="{% url 'meditation:track_list' %}">{% trans "Tracks" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'courses' in request.path %}active{% endif %}" href="{% url 'meditation:course_list' %}">{% trans "Courses" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'workshops' in request.path %}active{% endif %}" href="{% url 'meditation:workshop_list' %}">{% trans "Workshops" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'groups' in request.path %}active{% endif %}" href="{% url 'meditation:group_list' %}">{% trans "Groups" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'events' in request.path %}active{% endif %}" href="{% url 'meditation:event_list' %}">{% trans "Events" %}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    {% if top_content %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-3">{% trans "Featured Content" %}</h2>
+            <div class="row">
+                {% for item in top_content %}
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 bg-dark text-white">
+                        <div class="position-relative">
+                            {% if item.image %}
+                            <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                            <img src="{% static 'meditation/default-content.jpg' %}" class="card-img-top" alt="{{ item.title }}" style="height: 200px; object-fit: cover;">
+                            {% endif %}
+                            <span class="position-absolute top-0 start-0 badge bg-warning m-2">
+                                {% trans "Featured" %}
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.title }}</h5>
+                            <p class="card-text">{{ item.description|truncatewords:20 }}</p>
+                        </div>
+                        <a href="{% url 'meditation:top_detail' item.pk %}" class="stretched-link"></a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between">
+                <button class="btn btn-dark">{% trans "Sort" %}</button>
+                <button class="btn btn-dark">{% trans "Duration" %}</button>
+                <button class="btn btn-dark">{% trans "Filters" %}</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for track in tracks %}
+        <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card meditation-card h-100 bg-dark text-white">
+                <div class="position-relative">
+                    {% if track.image %}
+                    <img src="{{ track.image.url }}" class="card-img-top" alt="{{ track.title }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <img src="{% static 'meditation/default-meditation.jpg' %}" class="card-img-top" alt="{{ track.title }}" style="height: 200px; object-fit: cover;">
+                    {% endif %}
+                    <div class="position-absolute bottom-0 start-0 p-3">
+                        <h5 class="mb-0">{{ track.duration }} {% trans "min." %}</h5>
+                    </div>
+                    <button class="btn btn-link position-absolute top-0 end-0 p-3 text-white">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="me-2">{{ track.rating }}</span>
+                        <i class="fas fa-star text-warning"></i>
+                        <span class="ms-2">• {% trans "MEDITATION" %}</span>
+                    </div>
+                    <h5 class="card-title">{{ track.title }}</h5>
+                    <p class="card-text text-muted">{{ track.author }}</p>
+                    <a href="{% url 'meditation:track_detail' track.pk %}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-center">{% trans "No meditations available at the moment." %}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<nav class="fixed-bottom bg-dark">
+    <div class="container">
+        <div class="row py-3">
+            <div class="col text-center">
+                <a href="{% url 'meditation:home' %}" class="text-white text-decoration-none">
+                    <i class="fas fa-home"></i><br>
+                    {% trans "Home" %}
+                </a>
+            </div>
+            <div class="col text-center">
+                <a href="{% url 'meditation:course_list' %}" class="text-white text-decoration-none">
+                    <i class="fas fa-graduation-cap"></i><br>
+                    {% trans "Learn" %}
+                </a>
+            </div>
+            <div class="col text-center">
+                <a href="{% url 'meditation:workshop_list' %}" class="text-white text-decoration-none">
+                    <i class="fas fa-spa"></i><br>
+                    {% trans "Practice" %}
+                </a>
+            </div>
+            <div class="col text-center">
+                <a href="{% url 'meditation:group_list' %}" class="text-white text-decoration-none">
+                    <i class="fas fa-users"></i><br>
+                    {% trans "Community" %}
+                </a>
+            </div>
+            <div class="col text-center">
+                <a href="#" class="text-white text-decoration-none">
+                    <i class="fas fa-user"></i><br>
+                    {% trans "Profile" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background-color: #121212;
+        color: white;
+        padding-bottom: 80px;
+    }
+    .card {
+        background-color: #1e1e1e;
+        border: none;
+        transition: transform 0.2s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    .nav-pills .nav-link {
+        color: white;
+        border-radius: 20px;
+        margin-right: 10px;
+    }
+    .nav-pills .nav-link.active {
+        background-color: #1e1e1e;
+    }
+    .btn-dark {
+        background-color: #1e1e1e;
+        border: none;
+        border-radius: 20px;
+    }
+    .fixed-bottom {
+        background-color: #1e1e1e !important;
+    }
+</style>
+{% endblock %} 

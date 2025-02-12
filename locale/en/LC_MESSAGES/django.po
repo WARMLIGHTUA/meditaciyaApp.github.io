@@ -1,0 +1,89 @@
+# English translation
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-11 15:00+0000\n"
+"PO-Revision-Date: 2024-02-11 15:00+0000\n"
+"Last-Translator: AI Assistant\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Meditation"
+msgstr "Meditation"
+
+msgid "Meditation List"
+msgstr "Meditation List"
+
+msgid "Meditations"
+msgstr "Meditations"
+
+msgid "Duration"
+msgstr "Duration"
+
+msgid "min."
+msgstr "min."
+
+msgid "Start Meditation"
+msgstr "Start Meditation"
+
+msgid "No meditations available at the moment."
+msgstr "No meditations available at the moment."
+
+msgid "Volume"
+msgstr "Volume"
+
+msgid "Start"
+msgstr "Start"
+
+msgid "Pause"
+msgstr "Pause"
+
+msgid "Reset"
+msgstr "Reset"
+
+msgid "Top"
+msgstr "Top"
+
+msgid "Tracks"
+msgstr "Tracks"
+
+msgid "Courses"
+msgstr "Courses"
+
+msgid "Workshops"
+msgstr "Workshops"
+
+msgid "Groups"
+msgstr "Groups"
+
+msgid "Events"
+msgstr "Events"
+
+msgid "Sort"
+msgstr "Sort"
+
+msgid "Filters"
+msgstr "Filters"
+
+msgid "MEDITATION"
+msgstr "MEDITATION"
+
+msgid "Home"
+msgstr "Home"
+
+msgid "Learn"
+msgstr "Learn"
+
+msgid "Practice"
+msgstr "Practice"
+
+msgid "Community"
+msgstr "Community"
+
+msgid "Profile"
+msgstr "Profile" 
