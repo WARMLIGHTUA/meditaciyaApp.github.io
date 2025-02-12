@@ -2,12 +2,12 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}{% trans "Meditation Tracks" %}{% endblock %}
+{% block title %}{% trans "Favorite Meditations" %}{% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>{% trans "Meditation Tracks" %}</h1>
+        <h1>{% trans "My Favorite Meditations" %}</h1>
     </div>
 
     <div class="row mb-4">
@@ -21,7 +21,7 @@
                         <i class="fas fa-star"></i> {% trans "Rating" %}
                     </button>
                     <button class="btn btn-theme" data-sort="date">
-                        <i class="fas fa-calendar"></i> {% trans "Date" %}
+                        <i class="fas fa-calendar"></i> {% trans "Date Added" %}
                     </button>
                 </div>
                 <div class="d-flex gap-2">
@@ -40,39 +40,34 @@
                         <span class="input-group-text">
                             <i class="fas fa-search"></i>
                         </span>
-                        <input type="text" class="form-control" id="searchInput" placeholder="{% trans 'Search tracks...' %}">
+                        <input type="text" class="form-control" id="searchInput" placeholder="{% trans 'Search favorites...' %}">
                     </div>
-                    <button class="btn btn-theme" data-bs-toggle="modal" data-bs-target="#filterModal">
-                        <i class="fas fa-filter"></i> {% trans "Filters" %}
-                    </button>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <div class="row" id="tracksList">
         {% for track in tracks %}
         <div class="col-12 col-md-6 col-lg-4 mb-4 track-item" 
              data-duration="{{ track.duration }}"
              data-rating="{{ track.rating }}"
-             data-date="{{ track.created_at|date:'Y-m-d' }}">
+             data-date="{{ track.favorited_by.added_at|date:'Y-m-d' }}">
             <div class="card h-100">
                 <div class="position-relative">
                     {% if track.image %}
                     <img src="{{ track.image.url }}" class="card-img-top track-image" alt="{{ track.title }}">
                     {% else %}
-                    <img src="{% static 'meditation/default-meditation.jpg' %}" class="card-img-top track-image" alt="{{ track.title }}">
+                    <img src="https://placehold.co/600x400?text=Meditation" class="card-img-top track-image" alt="{{ track.title }}">
                     {% endif %}
                     <div class="position-absolute bottom-0 start-0 p-3">
                         <h5 class="mb-0">{{ track.duration }} {% trans "min." %}</h5>
                     </div>
-                    {% if user.is_authenticated %}
-                    <div class="position-absolute top-0 end-0 p-2">
-                        <a href="{% url 'meditation:track_update' track.pk %}" class="btn btn-sm btn-theme me-1">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                    </div>
-                    {% endif %}
+                    <button class="btn btn-link position-absolute top-0 end-0 p-3 favorite-btn" 
+                            data-track-id="{{ track.id }}"
+                            data-is-favorite="true">
+                        <i class="fas fa-heart text-danger"></i>
+                    </button>
                 </div>
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-2">
@@ -104,44 +99,10 @@
         {% empty %}
         <div class="col-12">
             <div class="alert alert-info">
-                {% trans "No meditation tracks available at the moment." %}
+                {% trans "You haven't added any meditations to favorites yet." %}
             </div>
         </div>
         {% endfor %}
-    </div>
-</div>
-
-<!-- Filter Modal -->
-<div class="modal fade" id="filterModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">{% trans "Filter Tracks" %}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label class="form-label">{% trans "Duration" %}</label>
-                    <div class="d-flex gap-2">
-                        <input type="number" class="form-control" id="minDuration" placeholder="{% trans 'Min' %}">
-                        <input type="number" class="form-control" id="maxDuration" placeholder="{% trans 'Max' %}">
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">{% trans "Rating" %}</label>
-                    <select class="form-select" id="ratingFilter">
-                        <option value="">{% trans "All" %}</option>
-                        <option value="4.5">4.5+</option>
-                        <option value="4.0">4.0+</option>
-                        <option value="3.5">3.5+</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Close" %}</button>
-                <button type="button" class="btn btn-primary" id="applyFilters">{% trans "Apply" %}</button>
-            </div>
-        </div>
     </div>
 </div>
 {% endblock %}
@@ -152,7 +113,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const tracksList = document.getElementById('tracksList');
     const searchInput = document.getElementById('searchInput');
     const sortButtons = document.querySelectorAll('[data-sort]');
-    const applyFiltersBtn = document.getElementById('applyFilters');
     
     // Пошук
     searchInput.addEventListener('input', function() {
@@ -161,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         tracks.forEach(track => {
             const title = track.querySelector('.card-title').textContent.toLowerCase();
-            const description = track.querySelector('.card-text').textContent.toLowerCase();
+            const description = track.querySelector('.track-description').textContent.toLowerCase();
             const shouldShow = title.includes(searchTerm) || description.includes(searchTerm);
             track.style.display = shouldShow ? '' : 'none';
         });
@@ -183,60 +143,53 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Фільтри
-    applyFiltersBtn.addEventListener('click', function() {
-        const minDuration = document.getElementById('minDuration').value;
-        const maxDuration = document.getElementById('maxDuration').value;
-        const minRating = document.getElementById('ratingFilter').value;
-        
-        const tracks = document.querySelectorAll('.track-item');
-        tracks.forEach(track => {
-            const duration = parseInt(track.dataset.duration);
-            const rating = parseFloat(track.dataset.rating);
-            
-            let shouldShow = true;
-            
-            if (minDuration && duration < parseInt(minDuration)) shouldShow = false;
-            if (maxDuration && duration > parseInt(maxDuration)) shouldShow = false;
-            if (minRating && rating < parseFloat(minRating)) shouldShow = false;
-            
-            track.style.display = shouldShow ? '' : 'none';
-        });
-        
-        bootstrap.Modal.getInstance(document.getElementById('filterModal')).hide();
-    });
-    
     // Обране
     const favoriteButtons = document.querySelectorAll('.favorite-btn');
     favoriteButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
+            
+            const trackId = this.dataset.trackId;
             const icon = this.querySelector('i');
-            icon.classList.toggle('text-danger');
+            
+            fetch(`{% url 'meditation:home' %}track/${trackId}/favorite/`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    if (!data.is_favorite) {
+                        // Видаляємо картку з списку улюблених
+                        this.closest('.track-item').remove();
+                        
+                        // Перевіряємо чи список порожній
+                        if (document.querySelectorAll('.track-item').length === 0) {
+                            location.reload();
+                        }
+                    }
+                }
+            })
+            .catch(error => console.error('Error:', error));
         });
     });
     
-    // View switching
+    // Перемикання виду
     const viewButtons = document.querySelectorAll('.view-btn');
-    
     viewButtons.forEach(button => {
         button.addEventListener('click', function() {
             const view = this.dataset.view;
             
-            // Remove active class from all buttons
             viewButtons.forEach(btn => btn.classList.remove('active'));
-            // Add active class to clicked button
             this.classList.add('active');
             
-            // Remove all view classes
-            tracksList.classList.remove('view-table', 'view-small', 'view-large');
-            // Add new view class
-            tracksList.classList.add(`view-${view}`);
-            
-            // Update track items layout
             const trackItems = document.querySelectorAll('.track-item');
             trackItems.forEach(item => {
-                item.className = 'track-item'; // Reset classes
+                item.className = 'track-item';
                 switch(view) {
                     case 'table':
                         item.classList.add('col-12', 'mb-2');
@@ -261,39 +214,70 @@ document.addEventListener('DOMContentLoaded', function() {
         transition: transform 0.2s;
         background-color: var(--card-bg);
         color: var(--text-color);
+        border: 1px solid var(--border-color);
     }
+    
     .card:hover {
         transform: translateY(-5px);
+        box-shadow: 0 4px 8px var(--shadow-color);
     }
+    
+    .favorite-btn {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        z-index: 10;
+    }
+    
+    .favorite-btn:hover {
+        transform: scale(1.1);
+        background: rgba(255, 255, 255, 1);
+    }
+    
+    .favorite-btn i {
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+    }
+    
     .btn-theme {
         background-color: var(--card-bg);
         color: var(--text-color);
         border: 1px solid var(--border-color);
     }
+    
     .btn-theme:hover {
         background-color: var(--hover-bg);
         color: var(--text-color);
     }
+    
+    .btn-theme.active {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+    
     .input-group-text {
         background-color: var(--card-bg);
         color: var(--text-color);
         border-color: var(--border-color);
     }
+    
     .form-control {
         background-color: var(--card-bg);
         color: var(--text-color);
         border-color: var(--border-color);
     }
+    
     .form-control:focus {
         background-color: var(--card-bg);
         color: var(--text-color);
-    }
-    .modal-content {
-        background-color: var(--card-bg);
-        color: var(--text-color);
-    }
-    .modal-header, .modal-footer {
-        border-color: var(--border-color);
     }
     
     /* View styles */
@@ -320,10 +304,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     .view-small .track-image {
         height: 150px;
+        object-fit: cover;
     }
     
     .view-large .track-image {
         height: 200px;
+        object-fit: cover;
     }
     
     .view-small .track-description {
@@ -333,12 +319,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     .view-small .track-audio {
         display: none;
-    }
-    
-    .btn-theme.active {
-        background-color: var(--primary-color);
-        color: white;
-        border-color: var(--primary-color);
     }
 </style>
 {% endblock %} 

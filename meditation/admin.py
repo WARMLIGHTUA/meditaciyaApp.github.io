@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import MeditationTrack, TopContent, Course, Workshop, Group, Event
+from .models import MeditationTrack, TopContent, Course, Workshop, Group, Event, PageBackground
 
 @admin.register(MeditationTrack)
 class MeditationTrackAdmin(admin.ModelAdmin):
@@ -36,3 +36,17 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ('title', 'date', 'location', 'is_online', 'max_participants', 'author')
     search_fields = ('title', 'description', 'location', 'author')
     list_filter = ('is_online', 'date', 'max_participants')
+
+@admin.register(PageBackground)
+class PageBackgroundAdmin(admin.ModelAdmin):
+    list_display = ('page', 'theme', 'background_color', 'background_opacity')
+    list_filter = ('page', 'theme')
+    fieldsets = (
+        (None, {
+            'fields': ('page', 'theme')
+        }),
+        ('Background Settings', {
+            'fields': ('background_image', 'background_video', 'background_color', 'background_opacity'),
+            'classes': ('wide',)
+        })
+    )

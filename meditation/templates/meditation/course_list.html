@@ -8,11 +8,6 @@
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>{% trans "Courses" %}</h1>
-        {% if user.is_staff %}
-        <div class="alert alert-info">
-            {% trans "Content management is available in the admin panel" %}
-        </div>
-        {% endif %}
     </div>
     
     <div class="row">

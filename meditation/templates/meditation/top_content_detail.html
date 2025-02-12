@@ -52,7 +52,8 @@
                 <div class="card-body">
                     <h3>{% trans "Comments" %}</h3>
                     <!-- Add comment form here -->
-                    <form class="mb-4">
+                    <form method="post" class="mb-4">
+                        {% csrf_token %}
                         <div class="mb-3">
                             <textarea class="form-control bg-dark text-white" rows="3" placeholder="{% trans 'Add a comment...' %}"></textarea>
                         </div>
