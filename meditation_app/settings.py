@@ -27,7 +27,17 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-ols!gw9ehg01b!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost 127.0.0.1').split(' ')
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.railway.app',
+    'web-production-a622.up.railway.app'
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://web-production-a622.up.railway.app',
+    'https://*.railway.app'
+]
 
 
 # Application definition
@@ -84,10 +94,37 @@ WSGI_APPLICATION = 'meditation_app.wsgi.application'
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
-        conn_max_age=600
+        conn_max_age=int(os.environ.get('DJANGO_CONN_MAX_AGE', 600))
     )
 }
 
+# Cache configuration
+if 'DJANGO_CACHE_BACKEND' in os.environ:
+    CACHES = {
+        'default': {
+            'BACKEND': os.environ.get('DJANGO_CACHE_BACKEND'),
+            'LOCATION': os.environ.get('DJANGO_CACHE_LOCATION'),
+        }
+    }
+
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
+    },
+}
+
+# Admin notifications
+if 'DJANGO_ADMINS' in os.environ:
+    ADMINS = [tuple(admin.split(':')) for admin in os.environ.get('DJANGO_ADMINS').split(',')]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -134,13 +171,13 @@ LOCALE_PATHS = [
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.environ.get('DJANGO_STATIC_ROOT', BASE_DIR / 'staticfiles')
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'mediafiles'
+MEDIA_ROOT = os.environ.get('DJANGO_MEDIA_ROOT', BASE_DIR / 'mediafiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -154,11 +191,11 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Security settings
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = os.environ.get('DJANGO_SECURE_SSL_REDIRECT', 'True') == 'True'
+    SESSION_COOKIE_SECURE = os.environ.get('DJANGO_SESSION_COOKIE_SECURE', 'True') == 'True'
+    CSRF_COOKIE_SECURE = os.environ.get('DJANGO_CSRF_COOKIE_SECURE', 'True') == 'True'
     SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+    SECURE_CONTENT_TYPE_NOSNIFF = os.environ.get('DJANGO_SECURE_CONTENT_TYPE_NOSNIFF', 'True') == 'True'
+    SECURE_HSTS_SECONDS = int(os.environ.get('DJANGO_SECURE_HSTS_SECONDS', 31536000))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get('DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', 'True') == 'True'
+    SECURE_HSTS_PRELOAD = os.environ.get('DJANGO_SECURE_HSTS_PRELOAD', 'True') == 'True'
