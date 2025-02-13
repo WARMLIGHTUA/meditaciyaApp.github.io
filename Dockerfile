@@ -1,25 +1,35 @@
-FROM python:3.13-slim
+FROM python:3.11-slim
 
-# Встановлення залежностей системи
+# Встановлення системних залежностей
 RUN apt-get update && apt-get install -y \
     build-essential \
-    libpq-dev \
+    python3-dev \
+    python3-pip \
+    python3-setuptools \
+    python3-wheel \
+    python3-cffi \
+    libcairo2 \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libgdk-pixbuf2.0-0 \
+    libffi-dev \
+    shared-mime-info \
     && rm -rf /var/lib/apt/lists/*
 
 # Встановлення робочої директорії
 WORKDIR /app
 
 # Копіювання файлів проекту
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
 COPY . .
 
-# Збирання статичних файлів
+# Встановлення Python залежностей
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Збірка статичних файлів
 RUN python manage.py collectstatic --noinput
 
 # Відкриття порту
 EXPOSE 8000
 
-# Запуск додатку
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "meditation_app.wsgi"] 
+# Команда запуску
+CMD ["gunicorn", "meditation_app.wsgi:application", "--bind", "0.0.0.0:8000"] 
