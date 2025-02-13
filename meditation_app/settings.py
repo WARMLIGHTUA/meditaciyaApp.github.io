@@ -27,17 +27,22 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-ols!gw9ehg01b!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
+# Railway специфічні налаштування
+RAILWAY_ENVIRONMENT = os.environ.get('RAILWAY_ENVIRONMENT_NAME', 'development')
+RAILWAY_DOMAIN = os.environ.get('RAILWAY_PUBLIC_DOMAIN', '')
+
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '.railway.app',
-    'web-production-a622.up.railway.app'
+    RAILWAY_DOMAIN,
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://web-production-a622.up.railway.app',
-    'https://*.railway.app'
-]
+if RAILWAY_DOMAIN:
+    CSRF_TRUSTED_ORIGINS = [
+        f'https://{RAILWAY_DOMAIN}',
+        'https://*.railway.app'
+    ]
 
 
 # Application definition
@@ -190,12 +195,12 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Security settings
-if not DEBUG:
-    SECURE_SSL_REDIRECT = os.environ.get('DJANGO_SECURE_SSL_REDIRECT', 'True') == 'True'
-    SESSION_COOKIE_SECURE = os.environ.get('DJANGO_SESSION_COOKIE_SECURE', 'True') == 'True'
-    CSRF_COOKIE_SECURE = os.environ.get('DJANGO_CSRF_COOKIE_SECURE', 'True') == 'True'
+if RAILWAY_ENVIRONMENT == 'production':
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = os.environ.get('DJANGO_SECURE_CONTENT_TYPE_NOSNIFF', 'True') == 'True'
-    SECURE_HSTS_SECONDS = int(os.environ.get('DJANGO_SECURE_HSTS_SECONDS', 31536000))
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get('DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', 'True') == 'True'
-    SECURE_HSTS_PRELOAD = os.environ.get('DJANGO_SECURE_HSTS_PRELOAD', 'True') == 'True'
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True

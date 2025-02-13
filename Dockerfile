@@ -14,6 +14,9 @@ RUN apt-get update && apt-get install -y \
     libgdk-pixbuf2.0-0 \
     libffi-dev \
     shared-mime-info \
+    postgresql \
+    postgresql-contrib \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Встановлення робочої директорії
@@ -25,11 +28,14 @@ COPY . .
 # Встановлення Python залежностей
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Збірка статичних файлів
+# Створення необхідних директорій
+RUN mkdir -p /app/staticfiles /app/mediafiles
+
+# Збірка статичних файлів та міграції
 RUN python manage.py collectstatic --noinput
 
 # Відкриття порту
 EXPOSE 8000
 
 # Команда запуску
-CMD ["gunicorn", "meditation_app.wsgi:application", "--bind", "0.0.0.0:8000"] 
+CMD ["sh", "-c", "python manage.py migrate && gunicorn meditation_app.wsgi:application --bind 0.0.0.0:$PORT"] 
