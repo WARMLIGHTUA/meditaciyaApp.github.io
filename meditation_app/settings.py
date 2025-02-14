@@ -31,12 +31,12 @@ DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 RAILWAY_ENVIRONMENT = os.environ.get('RAILWAY_ENVIRONMENT_NAME', 'development')
 RAILWAY_DOMAIN = os.environ.get('RAILWAY_PUBLIC_DOMAIN', '')
 
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    '.railway.app',
-    RAILWAY_DOMAIN,
-]
+# Налаштування дозволених хостів
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,.railway.app').split(',')
+
+# Додаємо RAILWAY_DOMAIN до ALLOWED_HOSTS якщо він існує
+if RAILWAY_DOMAIN and RAILWAY_DOMAIN not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(RAILWAY_DOMAIN)
 
 if RAILWAY_DOMAIN:
     CSRF_TRUSTED_ORIGINS = [
