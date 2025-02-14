@@ -114,24 +114,27 @@ WSGI_APPLICATION = 'meditation_app.wsgi.application'
 # Використовуємо DATABASE_URL з Railway
 DATABASE_URL = os.getenv('DATABASE_URL')
 
-if not DATABASE_URL:
-    # Якщо DATABASE_URL не встановлено, використовуємо окремі змінні
-    DB_USER = os.getenv('POSTGRES_USER', 'postgres')
-    DB_PASSWORD = os.getenv('POSTGRES_PASSWORD')
-    DB_HOST = os.getenv('POSTGRES_HOST', 'localhost')
-    DB_PORT = os.getenv('POSTGRES_PORT', '5432')
-    DB_NAME = os.getenv('POSTGRES_DB', 'railway')
-    
-    DATABASE_URL = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
-
 # Налаштування бази даних
 DATABASES = {
-    'default': dj_database_url.config(
-        default=DATABASE_URL,
-        conn_max_age=600,
-        ssl_require=True
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'OPTIONS': {
+            'connect_timeout': 5,
+            'keepalives': 1,
+            'keepalives_idle': 30,
+            'keepalives_interval': 10,
+            'keepalives_count': 5,
+            'sslmode': 'require',
+            'options': '-c statement_timeout=5000'
+        }
+    }
 }
+
+if DATABASE_URL:
+    config = dj_database_url.parse(DATABASE_URL)
+    DATABASES['default'].update(config)
+    DATABASES['default']['CONN_MAX_AGE'] = 60
+    DATABASES['default']['ATOMIC_REQUESTS'] = True
 
 # Додаємо атомарні транзакції
 ATOMIC_REQUESTS = True
