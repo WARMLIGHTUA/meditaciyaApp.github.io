@@ -124,23 +124,12 @@ if not DATABASE_URL:
     
     DATABASE_URL = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
 
-# Налаштування бази даних з розширеними опціями
+# Налаштування бази даних
 DATABASES = {
     'default': dj_database_url.config(
         default=DATABASE_URL,
         conn_max_age=600,
-        conn_health_checks=True,
-        ssl_require=True,
-        options={
-            'connect_timeout': 30,
-            'keepalives': 1,
-            'keepalives_idle': 30,
-            'keepalives_interval': 10,
-            'keepalives_count': 5,
-            'sslmode': 'require',
-            'target_session_attrs': 'read-write',
-            'application_name': 'django',
-        }
+        ssl_require=True
     )
 }
 
