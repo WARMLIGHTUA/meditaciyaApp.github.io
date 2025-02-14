@@ -1,1 +1,1 @@
-web: python manage.py migrate && python manage.py collectstatic --no-input --clear && gunicorn meditation_app.wsgi --log-file - --log-level debug 
+web: python manage.py migrate && python manage.py collectstatic --no-input --clear && gunicorn meditation_app.wsgi --workers 2 --threads 2 --timeout 120 --max-requests 1000 --max-requests-jitter 50 --log-file - --log-level debug --capture-output --enable-stdio-inheritance 

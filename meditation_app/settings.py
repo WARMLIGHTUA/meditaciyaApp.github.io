@@ -114,9 +114,22 @@ DATABASES = {
     'default': dj_database_url.config(
         default=os.getenv('DATABASE_URL'),
         conn_max_age=600,
-        ssl_require=True
+        ssl_require=True,
+        options={
+            'connect_timeout': 10,
+            'keepalives': 1,
+            'keepalives_idle': 30,
+            'keepalives_interval': 10,
+            'keepalives_count': 5,
+        }
     )
 }
+
+# Додаємо атомарні транзакції
+ATOMIC_REQUESTS = True
+
+# Збільшуємо таймаут з'єднання
+DATABASE_CONNECTION_TIMEOUT = 60
 
 # Logging
 LOGGING = {
