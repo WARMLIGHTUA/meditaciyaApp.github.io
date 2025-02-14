@@ -73,6 +73,11 @@
             --border-color: #404040;
             --content-bg-rgb: 18, 18, 18;
         }
+
+        /* Disable transitions during theme changes */
+        .theme-changing * {
+            transition: none !important;
+        }
         
         /* Page background styles */
         .page-background {

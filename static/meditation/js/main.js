@@ -4,6 +4,8 @@
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const isDark = savedTheme ? savedTheme === 'dark' : prefersDark;
     document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    document.documentElement.style.display = 'none';
+    document.addEventListener('DOMContentLoaded', () => document.documentElement.style.display = '');
 })();
 
 // Main JavaScript file
@@ -14,6 +16,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to set theme
     function setTheme(isDark) {
+        // Add class to prevent transitions
+        document.body.classList.add('theme-changing');
+        
+        // Set theme
         html.setAttribute('data-theme', isDark ? 'dark' : 'light');
         document.body.classList.toggle('dark-theme', isDark);
         document.body.classList.toggle('light-theme', !isDark);
@@ -21,6 +27,11 @@ document.addEventListener('DOMContentLoaded', function() {
             themeIcon.textContent = isDark ? '☀️' : '🌙';
         }
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        
+        // Remove transition prevention class after theme is set
+        setTimeout(() => {
+            document.body.classList.remove('theme-changing');
+        }, 100);
     }
 
     // Check for saved theme preference or use system preference
