@@ -172,34 +172,40 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'uk'
+LANGUAGE_CODE = 'uk'  # Українська мова за замовчуванням
 TIME_ZONE = 'UTC'
-USE_I18N = True
-USE_L10N = True
+USE_I18N = True  # Включаємо інтернаціоналізацію
+USE_L10N = True  # Включаємо локалізацію
 USE_TZ = True
 
+# Доступні мови
 LANGUAGES = [
     ('uk', 'Українська'),
     ('en', 'English'),
     ('fr', 'Français'),
 ]
 
+# Шлях до файлів перекладів
 LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
 
-# Language cookie settings
+# Налаштування для мовних cookie
 LANGUAGE_COOKIE_NAME = 'django_language'
-LANGUAGE_COOKIE_AGE = None
+LANGUAGE_COOKIE_AGE = None  # Cookie дійсні до закриття браузера
 LANGUAGE_COOKIE_DOMAIN = None
 LANGUAGE_COOKIE_PATH = '/'
-LANGUAGE_COOKIE_SECURE = False
+LANGUAGE_COOKIE_SECURE = False  # Змінити на True в продакшені з HTTPS
 LANGUAGE_COOKIE_HTTPONLY = False
 LANGUAGE_COOKIE_SAMESITE = None
 
 # URL settings
 APPEND_SLASH = True
 PREPEND_WWW = False
+
+# Додаткові налаштування для локалізації
+LOCALE_MIDDLEWARE_EXCLUDED_PATHS = ['/admin/']
+I18N_URLS_EXCLUDE_PATTERNS = [r'^/admin/']
 
 
 # Static files (CSS, JavaScript, Images)

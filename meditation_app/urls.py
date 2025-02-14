@@ -21,19 +21,20 @@ from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns
 from django.views.i18n import set_language
 
-# Non-localized URLs
+# Non-localized URLs (адмін та статичні файли)
 urlpatterns = [
-    path('setlang/', set_language, name='set_language'),
+    path('admin/', admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n')),
 ]
 
-# Localized URLs
+# Localized URLs (всі інші URL з мовним префіксом)
 urlpatterns += i18n_patterns(
-    path('admin/', admin.site.urls),
+    path('setlang/', set_language, name='set_language'),
     path('', include('meditation.urls')),
-    prefix_default_language=True,
+    prefix_default_language=False,  # Змінюємо на False, щоб не додавати префікс для української мови
 )
 
+# Статичні файли для режиму розробки
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
