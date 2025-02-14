@@ -1,1 +1,1 @@
-web: python manage.py migrate && echo "from django.contrib.auth.models import User; User.objects.all().delete()" | python manage.py shell && python manage.py collectstatic --no-input --clear && gunicorn meditation_app.wsgi --log-file - --log-level debug 
+web: python manage.py migrate && echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'admin123')" | python manage.py shell && python manage.py collectstatic --no-input --clear && gunicorn meditation_app.wsgi --log-file - --log-level debug 
