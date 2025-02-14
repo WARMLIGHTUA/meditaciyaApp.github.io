@@ -1,6 +1,12 @@
-// Main JavaScript file
+// Theme handling - Set theme before page load
+(function() {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = savedTheme ? savedTheme === 'dark' : prefersDark;
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+})();
 
-// Theme handling
+// Main JavaScript file
 document.addEventListener('DOMContentLoaded', function() {
     const html = document.documentElement;
     const themeSwitch = document.querySelector('.theme-switcher');
@@ -11,7 +17,9 @@ document.addEventListener('DOMContentLoaded', function() {
         html.setAttribute('data-theme', isDark ? 'dark' : 'light');
         document.body.classList.toggle('dark-theme', isDark);
         document.body.classList.toggle('light-theme', !isDark);
-        themeIcon.textContent = isDark ? '☀️' : '🌙';
+        if (themeIcon) {
+            themeIcon.textContent = isDark ? '☀️' : '🌙';
+        }
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
     }
 
@@ -26,10 +34,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Theme switch handler
-    themeSwitch.addEventListener('click', () => {
-        const isDark = html.getAttribute('data-theme') === 'light';
-        setTheme(isDark);
-    });
+    if (themeSwitch) {
+        themeSwitch.addEventListener('click', () => {
+            const isDark = html.getAttribute('data-theme') === 'light';
+            setTheme(isDark);
+        });
+    }
 
     // Listen for system theme changes if no saved preference
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
