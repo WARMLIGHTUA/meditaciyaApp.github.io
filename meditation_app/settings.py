@@ -213,16 +213,37 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # Whitenoise configuration
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# CSRF and Session settings
+CSRF_COOKIE_NAME = 'csrftoken'
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = None
+CSRF_COOKIE_DOMAIN = None
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.railway.app',
+    'http://localhost',
+    'http://127.0.0.1',
+]
+
+SESSION_COOKIE_NAME = 'sessionid'
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = None
+SESSION_COOKIE_AGE = 1209600  # 2 weeks in seconds
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
 # Security settings
 if RAILWAY_ENVIRONMENT == 'production':
     SECURE_SSL_REDIRECT = False
-    SESSION_COOKIE_SECURE = False  # Тимчасово вимикаємо
-    CSRF_COOKIE_SECURE = False    # Тимчасово вимикаємо
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_HSTS_SECONDS = 0
     SECURE_HSTS_INCLUDE_SUBDOMAINS = False
     SECURE_HSTS_PRELOAD = False
+    
+    # Додаємо домен Railway до довірених
+    if RAILWAY_DOMAIN:
+        CSRF_TRUSTED_ORIGINS.append(f'https://{RAILWAY_DOMAIN}')
     
     # Налаштування для статичних файлів
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
