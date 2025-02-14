@@ -28,10 +28,10 @@ urlpatterns = [
 
 # URL з підтримкою локалізації
 urlpatterns += i18n_patterns(
-    path('admin/', admin.site.urls),  # Повертаємо адмін назад в i18n_patterns
+    path('admin/', admin.site.urls),  # Повертаємо адмін в i18n_patterns
     path('setlang/', set_language, name='set_language'),
     path('', include('meditation.urls')),
-    prefix_default_language=True,  # Змінюємо на True для послідовності URL
+    prefix_default_language=True,
 )
 
 # Статичні файли для режиму розробки
