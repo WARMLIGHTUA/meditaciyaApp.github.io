@@ -1,28 +1,30 @@
 // Theme handling - Set theme before page load
 (function() {
+    // Додаємо клас для запобігання миготіння під час завантаження
+    document.documentElement.style.visibility = 'hidden';
+    document.documentElement.classList.add('theme-changing');
+    
+    // Отримуємо та встановлюємо тему якомога раніше
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const isDark = savedTheme ? savedTheme === 'dark' : prefersDark;
     
-    // Додаємо клас для запобігання переходів під час початкового завантаження
-    document.documentElement.classList.add('theme-changing');
     document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
     
-    // Приховуємо контент до повного завантаження
-    const style = document.createElement('style');
-    style.textContent = 'html { visibility: hidden; }';
-    document.head.appendChild(style);
-    
-    document.addEventListener('DOMContentLoaded', () => {
-        // Показуємо контент після завантаження
+    // Функція для відображення контенту
+    function showContent() {
         document.documentElement.style.visibility = '';
-        // Видаляємо тимчасовий стиль
-        style.remove();
-        // Дозволяємо переходи після короткої затримки
         setTimeout(() => {
             document.documentElement.classList.remove('theme-changing');
-        }, 100);
-    });
+        }, 300);
+    }
+    
+    // Показуємо контент коли все завантажилось
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', showContent);
+    } else {
+        showContent();
+    }
 })();
 
 // Main JavaScript file
@@ -34,31 +36,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to set theme
     function setTheme(isDark) {
         // Add class to prevent transitions
-        document.documentElement.classList.add('theme-changing');
+        html.classList.add('theme-changing');
         
         // Set theme
         html.setAttribute('data-theme', isDark ? 'dark' : 'light');
-        document.body.classList.toggle('dark-theme', isDark);
-        document.body.classList.toggle('light-theme', !isDark);
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        
         if (themeIcon) {
             themeIcon.textContent = isDark ? '☀️' : '🌙';
         }
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
         
         // Remove transition prevention class after theme is set
         setTimeout(() => {
-            document.documentElement.classList.remove('theme-changing');
-        }, 300); // Збільшуємо затримку для більш плавного переходу
-    }
-
-    // Check for saved theme preference or use system preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-        setTheme(savedTheme === 'dark');
-    } else {
-        // Use system preference if no saved theme
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        setTheme(prefersDark);
+            html.classList.remove('theme-changing');
+        }, 300);
     }
 
     // Theme switch handler
@@ -69,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Listen for system theme changes if no saved preference
+    // Listen for system theme changes
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
         if (!localStorage.getItem('theme')) {
             setTheme(e.matches);
