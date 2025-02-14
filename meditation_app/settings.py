@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-ols!gw9ehg01b!v0@6#481__uljl9*+4a0rw68r80a_o^!b_n5')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True  # Тимчасово вмикаємо для діагностики
+DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 
 # Railway специфічні налаштування
 RAILWAY_ENVIRONMENT = os.environ.get('RAILWAY_ENVIRONMENT_NAME', 'development')
@@ -306,3 +306,15 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SAMESITE = 'Lax'
 LANGUAGE_COOKIE_SAMESITE = 'Lax'
+
+# Додаткові налаштування безпеки для продакшену
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_SECONDS = 31536000  # 1 рік
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    X_FRAME_OPTIONS = 'DENY'
