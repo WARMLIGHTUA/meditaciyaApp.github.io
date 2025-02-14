@@ -344,12 +344,10 @@ else:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = False
     SECURE_HSTS_PRELOAD = False
 
-# Оновлюємо налаштування cookie
+# Cookie налаштування
 LANGUAGE_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-
-# Змінюємо налаштування SameSite
 CSRF_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SAMESITE = 'Lax'
 LANGUAGE_COOKIE_SAMESITE = 'Lax'
