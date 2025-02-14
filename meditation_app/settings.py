@@ -223,3 +223,6 @@ if RAILWAY_ENVIRONMENT == 'production':
     SECURE_HSTS_SECONDS = 0  # Вимикаємо HSTS
     SECURE_HSTS_INCLUDE_SUBDOMAINS = False
     SECURE_HSTS_PRELOAD = False
+    
+    # Cache settings for static files
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
