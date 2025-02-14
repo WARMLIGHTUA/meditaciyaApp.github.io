@@ -203,6 +203,11 @@ LANGUAGE_COOKIE_SAMESITE = None
 APPEND_SLASH = True
 PREPEND_WWW = False
 
+# Налаштування для адмін-панелі
+LOGIN_URL = '/admin/login/'
+LOGIN_REDIRECT_URL = '/admin/'
+LOGOUT_REDIRECT_URL = '/admin/'
+
 # Додаткові налаштування для локалізації
 LOCALE_MIDDLEWARE_EXCLUDED_PATHS = ['/admin/']
 I18N_URLS_EXCLUDE_PATTERNS = [r'^/admin/']
