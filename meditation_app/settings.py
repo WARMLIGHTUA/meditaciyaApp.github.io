@@ -76,7 +76,9 @@ ROOT_URLCONF = 'meditation_app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),  # Додаємо загальну директорію для шаблонів
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -204,9 +206,9 @@ APPEND_SLASH = True
 PREPEND_WWW = False
 
 # Налаштування для адмін-панелі
-LOGIN_URL = '/admin/login/'
-LOGIN_REDIRECT_URL = '/admin/'
-LOGOUT_REDIRECT_URL = '/admin/'
+LOGIN_URL = 'admin:login'
+LOGIN_REDIRECT_URL = 'admin:index'
+LOGOUT_REDIRECT_URL = 'admin:login'
 
 # Додаткові налаштування для локалізації
 LOCALE_MIDDLEWARE_EXCLUDED_PATHS = ['/admin/']
