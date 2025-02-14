@@ -3,9 +3,26 @@
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const isDark = savedTheme ? savedTheme === 'dark' : prefersDark;
+    
+    // Додаємо клас для запобігання переходів під час початкового завантаження
+    document.documentElement.classList.add('theme-changing');
     document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-    document.documentElement.style.display = 'none';
-    document.addEventListener('DOMContentLoaded', () => document.documentElement.style.display = '');
+    
+    // Приховуємо контент до повного завантаження
+    const style = document.createElement('style');
+    style.textContent = 'html { visibility: hidden; }';
+    document.head.appendChild(style);
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        // Показуємо контент після завантаження
+        document.documentElement.style.visibility = '';
+        // Видаляємо тимчасовий стиль
+        style.remove();
+        // Дозволяємо переходи після короткої затримки
+        setTimeout(() => {
+            document.documentElement.classList.remove('theme-changing');
+        }, 100);
+    });
 })();
 
 // Main JavaScript file
@@ -17,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to set theme
     function setTheme(isDark) {
         // Add class to prevent transitions
-        document.body.classList.add('theme-changing');
+        document.documentElement.classList.add('theme-changing');
         
         // Set theme
         html.setAttribute('data-theme', isDark ? 'dark' : 'light');
@@ -30,8 +47,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Remove transition prevention class after theme is set
         setTimeout(() => {
-            document.body.classList.remove('theme-changing');
-        }, 100);
+            document.documentElement.classList.remove('theme-changing');
+        }, 300); // Збільшуємо затримку для більш плавного переходу
     }
 
     // Check for saved theme preference or use system preference

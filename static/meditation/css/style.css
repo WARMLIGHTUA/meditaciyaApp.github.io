@@ -1,13 +1,22 @@
+/* Base styles */
 :root {
     --light-bg: #ffffff;
     --light-text: #333333;
     --dark-bg: #1a1a1a;
     --dark-text: #ffffff;
+    --transition-duration: 0.3s;
 }
 
-/* Theme transitions */
+/* Global transitions */
 body {
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color var(--transition-duration) ease,
+                color var(--transition-duration) ease;
+}
+
+/* Disable transitions during theme changes */
+.theme-changing,
+.theme-changing * {
+    transition: none !important;
 }
 
 /* Light theme */
@@ -30,7 +39,7 @@ body {
     padding: 8px;
     font-size: 1.2rem;
     opacity: 0.8;
-    transition: opacity 0.3s ease;
+    transition: opacity var(--transition-duration) ease;
 }
 
 .theme-switcher:hover {

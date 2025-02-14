@@ -275,9 +275,10 @@ class EventUpdate(BaseContentUpdateView):
 
 def login_view(request):
     """
-    Представлення для входу користувача з додатковою валідацією.
+    Представлення для входу користувача з додатковою валідацією та логуванням.
     """
     if request.user.is_authenticated:
+        messages.info(request, _('You are already logged in.'))
         return redirect('meditation:home')
         
     if request.method == 'POST':
@@ -287,15 +288,26 @@ def login_view(request):
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                login(request, user)
-                messages.success(request, _('Successfully logged in!'))
-                next_url = request.GET.get('next')
-                return redirect(next_url if next_url else 'meditation:home')
+                if user.is_active:
+                    login(request, user)
+                    messages.success(request, _('Successfully logged in!'))
+                    next_url = request.GET.get('next')
+                    return redirect(next_url if next_url else 'meditation:home')
+                else:
+                    messages.error(request, _('Your account is disabled.'))
             else:
-                messages.error(request, _('Invalid username or password.'))
+                messages.error(request, _('Invalid username or password. Please try again.'))
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{error}")
     else:
         form = CustomAuthenticationForm()
-    return render(request, 'meditation/login.html', {'form': form})
+    
+    return render(request, 'meditation/login.html', {
+        'form': form,
+        'next': request.GET.get('next', '')
+    })
 
 def register_view(request):
     """
@@ -347,6 +359,7 @@ def logout_view(request):
     """
     if request.method == 'POST':
         logout(request)
+        messages.success(request, _('Successfully logged out!'))
         return redirect('meditation:home')
     return HttpResponseNotAllowed(['POST'])
 
