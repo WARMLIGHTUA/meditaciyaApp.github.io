@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-ols!gw9ehg01b!v0@6#481__uljl9*+4a0rw68r80a_o^!b_n5')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+DEBUG = True  # Тимчасово вмикаємо для діагностики
 
 # Railway специфічні налаштування
 RAILWAY_ENVIRONMENT = os.environ.get('RAILWAY_ENVIRONMENT_NAME', 'development')
@@ -215,9 +215,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Security settings
 if RAILWAY_ENVIRONMENT == 'production':
-    SECURE_SSL_REDIRECT = False  # Вимикаємо SSL redirect
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False  # Тимчасово вимикаємо
+    CSRF_COOKIE_SECURE = False    # Тимчасово вимикаємо
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_HSTS_SECONDS = 0
