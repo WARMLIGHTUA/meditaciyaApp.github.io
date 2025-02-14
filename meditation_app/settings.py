@@ -218,13 +218,13 @@ APPEND_SLASH = True
 PREPEND_WWW = False
 
 # Налаштування для адмін-панелі
-LOGIN_URL = 'admin:login'
-LOGIN_REDIRECT_URL = 'admin:index'
-LOGOUT_REDIRECT_URL = 'admin:login'
+LOGIN_URL = '/uk/admin/login/'  # Додаємо мовний префікс
+LOGIN_REDIRECT_URL = '/uk/admin/'  # Додаємо мовний префікс
+LOGOUT_REDIRECT_URL = '/uk/admin/login/'  # Додаємо мовний префікс
 
 # Додаткові налаштування для локалізації
-LOCALE_MIDDLEWARE_EXCLUDED_PATHS = ['/admin/']
-I18N_URLS_EXCLUDE_PATTERNS = [r'^/admin/']
+LOCALE_MIDDLEWARE_EXCLUDED_PATHS = []  # Прибираємо виключення для admin
+I18N_URLS_EXCLUDE_PATTERNS = []  # Прибираємо виключення для admin
 
 
 # Static files (CSS, JavaScript, Images)
