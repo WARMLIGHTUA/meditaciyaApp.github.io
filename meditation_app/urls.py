@@ -23,12 +23,12 @@ from django.views.i18n import set_language
 
 # Базові URL (без локалізації)
 urlpatterns = [
+    path('admin/', admin.site.urls),  # Адмін-панель без мовного префіксу
     path('i18n/', include('django.conf.urls.i18n')),
 ]
 
 # URL з підтримкою локалізації
 urlpatterns += i18n_patterns(
-    path('admin/', admin.site.urls),  # Повертаємо адмін в i18n_patterns
     path('setlang/', set_language, name='set_language'),
     path('', include('meditation.urls')),
     prefix_default_language=True,
