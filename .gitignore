@@ -59,4 +59,7 @@ coverage.xml
 *.cover
 
 # Django
-mediafiles/ 
+mediafiles/
+
+# Media files
+*.mp3 
