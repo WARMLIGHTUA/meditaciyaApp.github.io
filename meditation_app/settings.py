@@ -111,29 +111,35 @@ WSGI_APPLICATION = 'meditation_app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# Налаштування для PostgreSQL
-DB_USER = os.getenv('POSTGRES_USER', 'postgres')
-DB_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'IXNhKmurBbYbrXALqIlpjtORKItiBfBn')
-DB_HOST = os.getenv('POSTGRES_HOST', 'junction.proxy.rlwy.net')
-DB_PORT = os.getenv('POSTGRES_PORT', '59479')
-DB_NAME = os.getenv('POSTGRES_DB', 'railway')
+# Використовуємо DATABASE_URL з Railway
+DATABASE_URL = os.getenv('DATABASE_URL')
 
-# Формуємо DATABASE_URL якщо він не встановлений
-if not os.getenv('DATABASE_URL'):
+if not DATABASE_URL:
+    # Якщо DATABASE_URL не встановлено, використовуємо окремі змінні
+    DB_USER = os.getenv('POSTGRES_USER', 'postgres')
+    DB_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+    DB_HOST = os.getenv('POSTGRES_HOST', 'localhost')
+    DB_PORT = os.getenv('POSTGRES_PORT', '5432')
+    DB_NAME = os.getenv('POSTGRES_DB', 'railway')
+    
     DATABASE_URL = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
-    os.environ['DATABASE_URL'] = DATABASE_URL
 
+# Налаштування бази даних з розширеними опціями
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
+        default=DATABASE_URL,
         conn_max_age=600,
+        conn_health_checks=True,
         ssl_require=True,
         options={
-            'connect_timeout': 10,
+            'connect_timeout': 30,
             'keepalives': 1,
             'keepalives_idle': 30,
             'keepalives_interval': 10,
             'keepalives_count': 5,
+            'sslmode': 'require',
+            'target_session_attrs': 'read-write',
+            'application_name': 'django',
         }
     )
 }
@@ -144,7 +150,7 @@ ATOMIC_REQUESTS = True
 # Збільшуємо таймаут з'єднання
 DATABASE_CONNECTION_TIMEOUT = 60
 
-# Logging
+# Розширене логування для бази даних
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -185,6 +191,24 @@ if DEBUG:
         'level': 'DEBUG',
         'propagate': False,
     }
+
+# Додаємо додаткові логера для бази даних
+LOGGING['loggers'].update({
+    'django.db.backends': {
+        'handlers': ['console'],
+        'level': 'INFO',
+        'propagate': False,
+    },
+    'django.db.backends.schema': {
+        'handlers': ['console'],
+        'level': 'INFO',
+        'propagate': False,
+    }
+})
+
+if DEBUG:
+    LOGGING['loggers']['django.db.backends']['level'] = 'DEBUG'
+    LOGGING['loggers']['django.db.backends.schema']['level'] = 'DEBUG'
 
 # Cache configuration
 if 'DJANGO_CACHE_BACKEND' in os.environ:
