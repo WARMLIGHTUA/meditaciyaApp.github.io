@@ -98,6 +98,18 @@ WSGI_APPLICATION = 'meditation_app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# Налаштування для PostgreSQL
+DB_USER = os.getenv('POSTGRES_USER', 'postgres')
+DB_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'IXNhKmurBbYbrXALqIlpjtORKItiBfBn')
+DB_HOST = os.getenv('POSTGRES_HOST', 'junction.proxy.rlwy.net')
+DB_PORT = os.getenv('POSTGRES_PORT', '59479')
+DB_NAME = os.getenv('POSTGRES_DB', 'railway')
+
+# Формуємо DATABASE_URL якщо він не встановлений
+if not os.getenv('DATABASE_URL'):
+    DATABASE_URL = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+    os.environ['DATABASE_URL'] = DATABASE_URL
+
 DATABASES = {
     'default': dj_database_url.config(
         default=os.getenv('DATABASE_URL'),
@@ -108,7 +120,12 @@ DATABASES = {
 
 # Додаткове логування для діагностики підключення до БД
 if DEBUG:
-    print(f"Database URL: {os.getenv('DATABASE_URL')}")
+    print(f"Database connection info:")
+    print(f"Host: {DB_HOST}")
+    print(f"Port: {DB_PORT}")
+    print(f"Database: {DB_NAME}")
+    print(f"User: {DB_USER}")
+    print(f"URL: {os.getenv('DATABASE_URL')}")
     
     # Налаштування логування для SQL-запитів
     LOGGING['loggers']['django.db.backends'] = {
