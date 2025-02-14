@@ -23,17 +23,10 @@ from django.views.i18n import set_language
 
 urlpatterns = [
     path('setlang/', set_language, name='set_language'),
-]
-
-urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n')),
-)
-
-urlpatterns += i18n_patterns(
     path('', include('meditation.urls')),
-    prefix_default_language=True,
-)
+]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
