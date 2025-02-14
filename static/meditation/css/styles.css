@@ -45,10 +45,7 @@
 
 /* Global transitions */
 * {
-    transition: background-color 0.3s ease,
-                color 0.3s ease,
-                border-color 0.3s ease,
-                box-shadow 0.3s ease;
+    transition: none;
 }
 
 body {
@@ -73,6 +70,7 @@ body {
 .navbar .navbar-brand,
 .navbar .dropdown-toggle {
     color: var(--nav-text) !important;
+    transition: color 0.2s ease;
 }
 
 .navbar .nav-link:hover,
