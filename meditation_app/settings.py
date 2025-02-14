@@ -100,10 +100,22 @@ WSGI_APPLICATION = 'meditation_app.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
-        conn_max_age=int(os.environ.get('DJANGO_CONN_MAX_AGE', 600))
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=600,
+        ssl_require=True
     )
 }
+
+# Додаткове логування для діагностики підключення до БД
+if DEBUG:
+    print(f"Database URL: {os.getenv('DATABASE_URL')}")
+    
+    # Налаштування логування для SQL-запитів
+    LOGGING['loggers']['django.db.backends'] = {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+        'propagate': False,
+    }
 
 # Cache configuration
 if 'DJANGO_CACHE_BACKEND' in os.environ:
