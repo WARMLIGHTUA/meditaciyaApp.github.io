@@ -195,9 +195,9 @@ LANGUAGE_COOKIE_NAME = 'django_language'
 LANGUAGE_COOKIE_AGE = None  # Cookie дійсні до закриття браузера
 LANGUAGE_COOKIE_DOMAIN = None
 LANGUAGE_COOKIE_PATH = '/'
-LANGUAGE_COOKIE_SECURE = False  # Змінити на True в продакшені з HTTPS
+LANGUAGE_COOKIE_SECURE = True
 LANGUAGE_COOKIE_HTTPONLY = False
-LANGUAGE_COOKIE_SAMESITE = None
+LANGUAGE_COOKIE_SAMESITE = 'Lax'
 
 # URL settings
 APPEND_SLASH = True
@@ -242,7 +242,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # CSRF and Session settings
 CSRF_COOKIE_NAME = 'csrftoken'
 CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SAMESITE = None
+CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_DOMAIN = None
 CSRF_TRUSTED_ORIGINS = [
     'https://*.railway.app',
@@ -258,25 +258,37 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 # Security settings
 if RAILWAY_ENVIRONMENT == 'production':
-    SECURE_SSL_REDIRECT = True
+    # Вимикаємо SSL redirect, оскільки Railway сам керує SSL
+    SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_HSTS_SECONDS = 31536000  # 1 рік
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+    
+    # Тимчасово вимикаємо HSTS для діагностики
+    SECURE_HSTS_SECONDS = 0
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_PRELOAD = False
     
     # Додаємо домен Railway до довірених
     if RAILWAY_DOMAIN:
-        CSRF_TRUSTED_ORIGINS.extend([
+        CSRF_TRUSTED_ORIGINS = [
             f'https://{RAILWAY_DOMAIN}',
-            f'https://*.{RAILWAY_DOMAIN}',
             'https://*.railway.app'
-        ])
+        ]
     
     # Налаштування для статичних файлів
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
     WHITENOISE_USE_FINDERS = True
     WHITENOISE_MANIFEST_STRICT = False
     WHITENOISE_ALLOW_ALL_ORIGINS = True
+
+# Оновлюємо налаштування cookie
+LANGUAGE_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# Змінюємо налаштування SameSite
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = 'Lax'
+LANGUAGE_COOKIE_SAMESITE = 'Lax'
