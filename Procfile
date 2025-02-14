@@ -1,1 +1,1 @@
-web: python manage.py collectstatic --no-input && python manage.py migrate && gunicorn meditation_app.wsgi --log-file - 
+web: python manage.py migrate && python manage.py collectstatic --no-input --clear && gunicorn meditation_app.wsgi --log-file - 
