@@ -118,31 +118,6 @@ DATABASES = {
     )
 }
 
-# Додаткове логування для діагностики підключення до БД
-if DEBUG:
-    print(f"Database connection info:")
-    print(f"Host: {DB_HOST}")
-    print(f"Port: {DB_PORT}")
-    print(f"Database: {DB_NAME}")
-    print(f"User: {DB_USER}")
-    print(f"URL: {os.getenv('DATABASE_URL')}")
-    
-    # Налаштування логування для SQL-запитів
-    LOGGING['loggers']['django.db.backends'] = {
-        'handlers': ['console'],
-        'level': 'DEBUG',
-        'propagate': False,
-    }
-
-# Cache configuration
-if 'DJANGO_CACHE_BACKEND' in os.environ:
-    CACHES = {
-        'default': {
-            'BACKEND': os.environ.get('DJANGO_CACHE_BACKEND'),
-            'LOCATION': os.environ.get('DJANGO_CACHE_LOCATION'),
-        }
-    }
-
 # Logging
 LOGGING = {
     'version': 1,
@@ -176,6 +151,23 @@ LOGGING = {
         'level': 'DEBUG',
     },
 }
+
+# Додаткове логування для діагностики підключення до БД
+if DEBUG:
+    LOGGING['loggers']['django.db.backends'] = {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+        'propagate': False,
+    }
+
+# Cache configuration
+if 'DJANGO_CACHE_BACKEND' in os.environ:
+    CACHES = {
+        'default': {
+            'BACKEND': os.environ.get('DJANGO_CACHE_BACKEND'),
+            'LOCATION': os.environ.get('DJANGO_CACHE_LOCATION'),
+        }
+    }
 
 # Admin notifications
 if 'DJANGO_ADMINS' in os.environ:
@@ -264,8 +256,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
