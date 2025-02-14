@@ -173,9 +173,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = 'uk'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -190,6 +188,7 @@ LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
 
+# Language cookie settings
 LANGUAGE_COOKIE_NAME = 'django_language'
 LANGUAGE_COOKIE_AGE = None
 LANGUAGE_COOKIE_DOMAIN = None
@@ -197,6 +196,10 @@ LANGUAGE_COOKIE_PATH = '/'
 LANGUAGE_COOKIE_SECURE = False
 LANGUAGE_COOKIE_HTTPONLY = False
 LANGUAGE_COOKIE_SAMESITE = None
+
+# URL settings
+APPEND_SLASH = True
+PREPEND_WWW = False
 
 
 # Static files (CSS, JavaScript, Images)
