@@ -166,6 +166,16 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'INFO' if not DEBUG else 'DEBUG',
+            'propagate': False,
+        },
+        'django.db.backends.schema': {
+            'handlers': ['console'],
+            'level': 'INFO' if not DEBUG else 'DEBUG',
+            'propagate': False,
+        }
     },
     'root': {
         'handlers': ['console'],
@@ -317,31 +327,22 @@ SESSION_COOKIE_AGE = 1209600  # 2 weeks in seconds
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 # Security settings
-if RAILWAY_ENVIRONMENT == 'production':
-    # Вимикаємо SSL redirect, оскільки Railway сам керує SSL
-    SECURE_SSL_REDIRECT = False
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    
-    # Тимчасово вимикаємо HSTS для діагностики
+SECURE_SSL_REDIRECT = False  # Railway сам керує SSL
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+
+# HSTS налаштування
+if not DEBUG and RAILWAY_ENVIRONMENT == 'production':
+    SECURE_HSTS_SECONDS = 31536000  # 1 рік
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+else:
     SECURE_HSTS_SECONDS = 0
     SECURE_HSTS_INCLUDE_SUBDOMAINS = False
     SECURE_HSTS_PRELOAD = False
-    
-    # Додаємо домен Railway до довірених
-    if RAILWAY_DOMAIN:
-        CSRF_TRUSTED_ORIGINS = [
-            f'https://{RAILWAY_DOMAIN}',
-            'https://*.railway.app'
-        ]
-    
-    # Налаштування для статичних файлів
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-    WHITENOISE_USE_FINDERS = True
-    WHITENOISE_MANIFEST_STRICT = False
-    WHITENOISE_ALLOW_ALL_ORIGINS = True
 
 # Оновлюємо налаштування cookie
 LANGUAGE_COOKIE_SECURE = True
